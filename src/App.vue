@@ -64,10 +64,10 @@ export default {
 
     notificationQtps() {
         this.$notify({
-          title: '欢迎进入质量工具平台',
+          title: '欢迎进入质量工具',
           dangerouslyUseHTMLString: true,
-          message: '有任何问题请 <b>@刘昌肇</b>',
-          type: 'success',
+          message: '有任何问题请 <b>@测试负责人</b>',
+          // type: 'success',
           // position: 'bottom-right'
       });
     },
