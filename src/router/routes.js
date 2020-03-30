@@ -4,7 +4,7 @@ import Project from '../views/Case/Project';
 
 export default [
   {
-    redirect: '/case-search',
+    redirect: '/project',
     path: '/',
   },
   {
