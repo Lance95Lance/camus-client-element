@@ -13,7 +13,9 @@
       <el-col :span="8" v-for="(val, index) in projectList" :key="index">
         <el-card class="box-card-header" shadow="hover">
           <div slot="header" class="clearfix">
-            <span>{{ val.project_title }}</span>
+            <el-tag effect="dark">{{ val.project_title }}</el-tag>
+            <div style="float: right;line-height: 30px;">
+                <span>{{ val.created_person }}</span></div>
           </div>
           <div class="text item">{{ val.project_detail }}</div>
         </el-card>
@@ -77,7 +79,7 @@ export default {
   },
 
   async mounted() {
-      this.getProject();
+    this.getProject();
     // if (this.projectList.length > 0) {
     //   this.activeTab = this.$route.query.projectId || String(this.areaList[0].id);
     // }
