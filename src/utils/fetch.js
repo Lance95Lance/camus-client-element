@@ -26,7 +26,7 @@ export function DeleteById(url = '', params) {
 
 axios.interceptors.response.use(
   res => {
-    if (!res.data.success) Message.error(res.data.message);
+    // if (!res.data.success) Message.error(res.data.message);
     return res.data;
   },
   (err) => {

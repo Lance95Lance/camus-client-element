@@ -122,3 +122,12 @@ export function deleteCase(params) {
 export function putSimpleChangeCase(id, params) {
   return Put(`api/v1/case` + '/' + id, params);
 }
+
+export function getProject() {
+  return Get(`/api/v1/project`);
+}
+
+
+export function postProject(params) {
+  return Post(`/api/v1/project`, params);
+}
