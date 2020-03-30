@@ -4,7 +4,7 @@
       <div class="searchSelectGroup">
         <el-form :inline="true" ref="searchform" :model="searchform">
           <el-form-item label="所属项目" prop="project_id">
-            <el-select v-model="searchform.project_id" clearable placeholder="请选择">
+            <el-select filterable v-model="searchform.project_id" clearable placeholder="请选择">
               <el-option
                 v-for="item in caseConf.project_options"
                 :key="item.value"
@@ -68,7 +68,10 @@
 
       <!-- <el-form ref="searchform" :model="searchform" label-width="100px"> -->
 
-      <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)">
+      <el-table
+        cell-style="white-space: pre-line"
+        :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)"
+      >
         <el-table-column prop="table_number" label="序号"></el-table-column>
         <!-- <el-table-column
         prop="case_priority"
@@ -298,6 +301,9 @@ export default {
     // this.totalCount = this.tableData.length;
   },
   methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      return 'white-space: pre-line';
+    },
     Notification(title_context, message, type_context) {
       this.$notify({
         title: title_context,
@@ -410,4 +416,9 @@ export default {
 .searchSelectGroup {
   text-align: right;
 }
+
+/*实现表格头数据换行*/
+/* .el-table .cell {
+    white-space: pre-line;
+} */
 </style>

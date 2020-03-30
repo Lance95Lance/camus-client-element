@@ -131,3 +131,7 @@ export function getProject() {
 export function postProject(params) {
   return Post(`/api/v1/project`, params);
 }
+
+export function putProject(id, params) {
+  return Put(`api/v1/project` + '/' + id, params);
+}
