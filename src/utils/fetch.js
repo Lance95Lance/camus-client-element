@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Message } from 'element-ui';
+import Router from '../router';
+
 
 axios.defaults.timeout = 0;
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
@@ -30,8 +32,8 @@ axios.interceptors.response.use(
     return res.data;
   },
   (err) => {
-    if (err.response.status == 401) {
-      window.location.href = err.response.headers['location'];
+    if (err.response.status === 401) {
+      Router.push('/login');
     }
 
     Message.error('系统错误');

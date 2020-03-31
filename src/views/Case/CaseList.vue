@@ -69,7 +69,6 @@
       <!-- <el-form ref="searchform" :model="searchform" label-width="100px"> -->
 
       <el-table
-        cell-style="white-space: pre-line"
         :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)"
       >
         <el-table-column prop="table_number" label="序号"></el-table-column>
@@ -200,7 +199,7 @@ export default {
       // 总条数，根据接口获取数据长度(注意：这里不能为空)
       totalCount: 1,
       // 个数选择器（可修改）
-      pageSizes: [7, 10, 50, 100, 100],
+      pageSizes: [7, 10, 50, 100],
       // 默认每页显示的条数（可修改）
       PageSize: 7,
       searchform: {

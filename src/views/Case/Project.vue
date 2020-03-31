@@ -15,7 +15,7 @@
           <div slot="header" class="clearfix">
             <el-tag effect="dark">{{ val.project_title }}</el-tag>
             <div style="float: right;line-height: 30px;">
-              <span>{{ val.created_person }}</span>
+              <span>{{ '用例数: ' + val.case_count }}</span>
             </div>
           </div>
 
@@ -230,6 +230,8 @@ export default {
 }
 
 .box-card-header {
+    font-weight: bold;
+
   height: 250px;
   margin-bottom: 20px;
   .el-card__body {
@@ -261,7 +263,7 @@ export default {
   // -webkit-box-orient: vertical;
   // -webkit-line-clamp: 1;
   // overflow: hidden;
-  // font-weight: bold;
+  font-weight: normal;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

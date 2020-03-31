@@ -1,5 +1,6 @@
 import CaseList from '../views/Case/CaseList';
 import Project from '../views/Case/Project';
+import Login from '../views/Login/Login';
 
 
 export default [
@@ -19,6 +20,13 @@ export default [
     path: '/project',
     meta: {
       title: '项目看板',
+    },
+  },
+  {
+    component: Login,
+    path: '/login',
+    meta: {
+      title: '登录',
     },
   },
 ];
