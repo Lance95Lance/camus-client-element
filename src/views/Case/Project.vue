@@ -230,8 +230,7 @@ export default {
 }
 
 .box-card-header {
-    font-weight: bold;
-
+  font-weight: bold;
   height: 250px;
   margin-bottom: 20px;
   .el-card__body {

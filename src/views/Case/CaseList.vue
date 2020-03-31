@@ -201,7 +201,7 @@ export default {
       // 个数选择器（可修改）
       pageSizes: [7, 10, 50, 100],
       // 默认每页显示的条数（可修改）
-      PageSize: 7,
+      PageSize: 10,
       searchform: {
         case_priority: '',
         project_id: '',
