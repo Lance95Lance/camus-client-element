@@ -9,6 +9,16 @@ export default [
         label: '项目看板',
         url: '/project',
       },
+      {
+        id: '1-2',
+        label: '测试进度',
+        url: '/monitor',
+      },
+      {
+        id: '1-3',
+        label: '进度总览',
+        url: '/monitor-data',
+      },
     ],
   },
   {

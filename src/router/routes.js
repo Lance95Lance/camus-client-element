@@ -1,6 +1,9 @@
 import CaseList from '../views/Case/CaseList';
 import Project from '../views/Case/Project';
 import Login from '../views/Login/Login';
+import Monitor from '../views/Monitor/Index';
+import MonitorRecord from '../views/Monitor/Record';
+import MonitorDataBi from '../views/Monitor/DataBi';
 
 
 export default [
@@ -22,6 +25,30 @@ export default [
       title: '项目看板',
     },
   },
+
+  {
+    component: Monitor,
+    path: '/monitor',
+    meta: {
+      title: '监控录入',
+    },
+  },
+  {
+    component: MonitorRecord,
+    path: '/monitor/:id',
+    meta: {
+      title: '监控录入',
+    },
+  },
+  {
+    component: MonitorDataBi,
+    path: '/monitor-data',
+    meta: {
+      title: '数据报表',
+    },
+  },
+
+
   {
     component: Login,
     path: '/login',
