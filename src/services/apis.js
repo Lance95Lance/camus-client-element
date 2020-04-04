@@ -1,19 +1,26 @@
 import { Get, Put, Delete, Post, DeleteById } from '../utils/fetch';
 
-export function getMonitorArea() {
-  return Get(`/api/v1/areas`);
+export function getProjectArea() {
+  return Get(`/api/v1/area`);
 }
 
-export function getMonitorProjects(area_id, start_date, end_date) {
-  return Get(`/api/v1/projects`, { area_id, start_date, end_date });
+export function getProjectDetail(area_id) {
+  return Get(`/api/v1/project/` + area_id);
 }
 
 export function modifyMonitorProject(area_id, id, name, description) {
   return Put(`/api/v1/project`, { area_id, id, name, description });
 }
 
-export function addMonitorProject(area_id, name, description) {
-  return Post(`/api/v1/postProject`, { area_id, name, description });
+export function addProjectDetail(area_id, name, description, created_person=NaN, updated_person) {
+  if (isNaN(created_person)){
+    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, created_person, updated_person });
+
+  }else{
+    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, updated_person });
+
+  }
+
 }
 
 export function deleteMonitorProject(area_id, id, name, description) {
@@ -41,7 +48,7 @@ export function getMonitorDataBi(start_date, end_date) {
 }
 
 export function getMonitorConfig() {
-  return Get(`/api/v1/monitorConfig`);
+  return Get(`/api/v1/conf`);
 }
 
 export function postPublicService(app_name, host_name, download_url) {
@@ -123,15 +130,15 @@ export function putSimpleChangeCase(id, params) {
   return Put(`api/v1/case` + '/' + id, params);
 }
 
-export function getProject() {
-  return Get(`/api/v1/project`);
-}
+// export function getProject() {
+//   return Get(`/api/v1/project`);
+// }
 
 
-export function postProject(params) {
-  return Post(`/api/v1/project`, params);
-}
+// export function postProject(params) {
+//   return Post(`/api/v1/project`, params);
+// }
 
-export function putProject(id, params) {
-  return Put(`api/v1/project` + '/' + id, params);
-}
+// export function putProject(id, params) {
+//   return Put(`api/v1/project` + '/' + id, params);
+// }

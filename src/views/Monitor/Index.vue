@@ -98,16 +98,17 @@ export default {
   methods: {
     ...mapActions(['getMonitorConfig', 'routePush', 'setCurrentTitle', 'setBreadCrumb']),
 
-    async getMonitorArea() {
-      const result = await apis.getMonitorArea();
+    async getProjectArea() {
+      const result = await apis.getProjectArea();
       if (!result.success) return;
       this.areaList = result.data;
     },
 
-    async getMonitorProjects(id) {
-      const startDate = format(startOfISOWeek(new Date()), 'YYYY-MM-DD');
-      const endDate = format(lastDayOfISOWeek(new Date()), 'YYYY-MM-DD');
-      const result = await apis.getMonitorProjects(+id, startDate, endDate);
+    async getProjectDetail(area_id) {
+      // const startDate = format(startOfISOWeek(new Date()), 'YYYY-MM-DD');
+      // const endDate = format(lastDayOfISOWeek(new Date()), 'YYYY-MM-DD');
+      // const result = await apis.getMonitorProjects(+id, startDate, endDate);
+      const result = await apis.getProjectDetail(area_id);
       if (!result.success) return;
       this.projectList = result.data;
     },
@@ -161,7 +162,7 @@ export default {
         const result = await apis.deleteMonitorProject(area_id, id, name, description);
         if (!result.success) return;
         this.$message.success('关闭成功');
-        this.getMonitorProjects(area_id);
+        this.getProjectDetail(area_id);
       });
     },
 
@@ -170,26 +171,29 @@ export default {
       const id = this.modifyData.uid;
       const name = this.modifyData.name;
       const description = this.modifyData.description;
+      const created_person = "创建人";
+      const updated_person = "更新人";
+
       if (!name) {
         this.$message.error('项目标题必填');
         return;
       }
       let result;
       if (this.modifyModal.type === 'modify') {
-        result = await apis.modifyMonitorProject(area_id, id, name, description);
+        result = await apis.modifyMonitorProject(area_id, id, name, description, updated_person);
       } else if (this.modifyModal.type === 'add') {
-        result = await apis.addMonitorProject(area_id, name, description);
+        result = await apis.addProjectDetail(area_id, name, description, created_person, updated_person);
       }
       if (!result.success) return;
       this.$message.success('操作成功');
       this.modifyModal.flag = false;
-      this.getMonitorProjects(area_id);
+      this.getProjectDetail(area_id);
     },
   },
   watch: {
     activeTab(val) {
-      this.routePush({ path: `/monitor`, query: { projectId: val } });
-      this.getMonitorProjects(val);
+      this.routePush({ path: `/monitor`, query: { areaId: val } });
+      this.getProjectDetail(val);
       const label = this.areaList[findIndex(this.areaList, { id: +val })].name;
       const path = this.$route.fullPath;
       this.onSetBreadCrumb(label, path, 0);
@@ -197,9 +201,9 @@ export default {
   },
   async mounted() {
     this.getMonitorConfig();
-    await this.getMonitorArea();
+    await this.getProjectArea();
     if (this.areaList.length > 0) {
-      this.activeTab = this.$route.query.projectId || String(this.areaList[0].id);
+      this.activeTab = this.$route.query.areaId || String(this.areaList[0].id);
     }
   },
 };
