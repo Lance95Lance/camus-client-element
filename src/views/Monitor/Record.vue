@@ -29,7 +29,7 @@
         width='100px',
         label='计划上线')
       el-table-column(
-        prop='qa_woner'
+        prop='qa_owner'
         width='90px',
         label='测试负责人')
       el-table-column(
@@ -44,7 +44,7 @@
         template(slot-scope="scope")
           span.red {{scope.row.risk_analysis}}
       el-table-column(
-        prop='mask'
+        prop='remark'
         label='备注')
       el-table-column(
         width='220px',
@@ -98,7 +98,7 @@
         el-row
           el-col(:span='12')
             el-form-item(label='测试负责人:')
-              el-input(v-model='modifyData.qa_woner', size='small')
+              el-input(v-model='modifyData.qa_owner', size='small')
           el-col(:span='24')
             el-form-item(label='风险分析:')
               el-input(v-model='modifyData.risk_analysis',
@@ -106,7 +106,7 @@
                 :rows='4', size='small')
           el-col(:span='24')
             el-form-item(label='备注:')
-              el-input(v-model='modifyData.mask',
+              el-input(v-model='modifyData.remark',
                 type='textarea',
                 :rows='4', size='small')
       span(slot="footer")
@@ -141,21 +141,29 @@ export default {
     ...mapGetters(['monitorConfig']),
 
     recordStage() {
-      return JSON.parse(get(this.monitorConfig, 'monitor_record_stage', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_stage', '{}'));
     },
 
     recordSyetem() {
-      return JSON.parse(get(this.monitorConfig, 'monitor_record_system', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_system', '{}'));
     },
   },
 
   methods: {
     ...mapActions(['getMonitorConfig', 'setBreadCrumb']),
+    
+    Notification(title_context, message, type_context) {
+    this.$notify({
+      title: title_context,
+      message: message,
+      type: type_context,
+    });
+  },
 
-    async getRecord(uid) {
-      const result = await apis.getMonitorRecord(uid);
+    async getRecord(project_detail_id) {
+      const result = await apis.getProjectProgress(project_detail_id);
       if (!result.success) return;
-      this.recordTableData = result.data.value;
+      this.recordTableData = result.data;
     },
 
     getSystemName(system_name) {
@@ -175,7 +183,7 @@ export default {
 
     onAddTap() {
       this.modifyData = {
-        project_id: this.$route.params.id,
+        project_detail_id: this.$route.params.id,
       };
       this.modifyModal = {
         flag: true,
@@ -186,8 +194,8 @@ export default {
 
     onModifyTap(val, type) {
       this.modifyData = {
-        project_id: val.project_uid,
-        id: val.uid,
+        project_detail_id: val.project_detail_id,
+        id: val.id,
         system_name: val.system_name,
         stage: val.stage,
         work_time: val.work_time,
@@ -195,9 +203,9 @@ export default {
         to_measure_time: val.to_measure_time,
         plan_to_prod_time: val.plan_to_prod_time,
         to_prod_time: val.to_prod_time,
-        qa_woner: val.qa_woner,
+        qa_owner: val.qa_owner,
         risk_analysis: val.risk_analysis,
-        mask: val.mask,
+        remark: val.remark,
       };
       if (type === 'add') {
         this.modifyModal = {
@@ -223,14 +231,14 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(async () => {
-        const project_id = val.project_uid;
-        const id = val.uid;
-        const system_name = val.system_name;
-        const stage = val.stage;
-        const result = await apis.deleteMonitorRecord(project_id, id, system_name, stage);
+        const project_detail_id = val.project_detail_id;
+        const id = val.id;
+        // const system_name = val.system_name;
+        // const stage = val.stage;
+        const result = await apis.deleteProjectProgress(id);
         if (!result.success) return;
-        this.$message.success('删除成功');
-        this.getRecord(project_id);
+        this.Notification('已执行', '删除成功', 'success')
+        this.getRecord(project_detail_id);
       });
     },
 
@@ -239,13 +247,13 @@ export default {
         ...this.modifyData,
         to_measure_time: this.modifyData.to_measure_time
           ? format(this.modifyData.to_measure_time, 'YYYY-MM-DD')
-          : '',
+          : null,
         plan_to_prod_time: this.modifyData.plan_to_prod_time
           ? format(this.modifyData.plan_to_prod_time, 'YYYY-MM-DD')
-          : '',
+          : null,
         to_prod_time: this.modifyData.to_prod_time
           ? format(this.modifyData.to_prod_time, 'YYYY-MM-DD')
-          : '',
+          : null,
       };
       if (params.system_name === undefined) {
         this.$message.error('请选择系统名称');
@@ -255,29 +263,29 @@ export default {
         this.$message.error('请选择阶段');
         return;
       }
-      if (params.stage === 8 && params.to_prod_time === '')  {
+      if (params.stage === 8 && params.to_prod_time === null)  {
         this.$message.error('项目已上线时,需要确定实际上线时间');
         return;
       }
-      if (params.stage !== 8 && params.to_prod_time !== '')  {
+      if (params.stage !== 8 && params.to_prod_time !== null)  {
         this.$message.error('非已上线阶段,实际上线时间应该为空');
         return;
       }
       let result;
-      if (this.modifyModal.type === 'add') result = await apis.addMonitorRecord(params);
-      else if (this.modifyModal.type === 'modify') result = await apis.modifyMonitorRecord(params);
+      if (this.modifyModal.type === 'add') result = await apis.addProjectProgress(params);
+      else if (this.modifyModal.type === 'modify') result = await apis.modifyProjectProgress(this.modifyData.id, params);
       if (!result.success) return;
-      this.$message.success('操作成功');
+        this.Notification('已执行', '操作成功', 'success')
       this.modifyModal.flag = false;
-      this.getRecord(this.modifyData.project_id);
+      this.getRecord(this.modifyData.project_detail_id);
     },
   },
   async mounted() {
     if (!this.monitorConfig) await this.getMonitorConfig();
-    const uid = this.$route.params.id;
+    const id = this.$route.params.id;
     const breadCrumb = localStorage.breadCrumb || '';
-    if (breadCrumb.indexOf(uid) > -1) this.setBreadCrumb({ arr: JSON.parse(breadCrumb), index: 0 });
-    this.getRecord(uid);
+    if (breadCrumb.indexOf(id) > -1) this.setBreadCrumb({ arr: JSON.parse(breadCrumb), index: 0 });
+    this.getRecord(id);
   },
 };
 </script>

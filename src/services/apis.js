@@ -8,39 +8,39 @@ export function getProjectDetail(area_id) {
   return Get(`/api/v1/project/` + area_id);
 }
 
-export function modifyMonitorProject(area_id, id, name, description) {
-  return Put(`/api/v1/project`, { area_id, id, name, description });
+export function modifyMonitorProject(area_id, id, name, description,created_person, updated_person ) {
+  return Put(`/api/v1/project/` + id ,{ project_area_id: area_id, name, description,created_person, updated_person });
 }
 
-export function addProjectDetail(area_id, name, description, created_person=NaN, updated_person) {
-  if (isNaN(created_person)){
-    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, created_person, updated_person });
+export function addProjectDetail(area_id, name, description, created_person=null, updated_person) {
+  if (created_person === null){
+    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, updated_person });
 
   }else{
-    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, updated_person });
+    return Post(`/api/v1/project`, { project_area_id: area_id, name, description, created_person, updated_person });
 
   }
 
 }
 
-export function deleteMonitorProject(area_id, id, name, description) {
-  return Delete(`/api/v1/project`, { area_id, id, name, description });
+export function deleteProjectDetail(area_id, id, name, description,created_person, updated_person ) {
+  return Delete(`/api/v1/project/` + id ,{ project_area_id: area_id, name, description,created_person, updated_person });
 }
 
-export function getMonitorRecord(project_id) {
-  return Get(`/api/v1/monitorRecord`, { project_id });
+export function getProjectProgress(project_detail_id) {
+  return Get(`/api/v1/projectProgress/` + project_detail_id );
 }
 
-export function modifyMonitorRecord(params) {
-  return Put(`/api/v1/handleMonitorRecord`, params);
+export function addProjectProgress(params) {
+  return Post(`/api/v1/projectProgress`, params);
 }
 
-export function addMonitorRecord(params) {
-  return Post(`/api/v1/postMonitorRecord`, params);
+export function modifyProjectProgress(id, params) {
+  return Put(`/api/v1/projectProgress/` + id, params);
 }
 
-export function deleteMonitorRecord(project_id, id, system_name, stage) {
-  return Delete(`/api/v1/handleMonitorRecord`, { project_id, id, system_name, stage });
+export function deleteProjectProgress(id) {
+  return Delete(`/api/v1/projectProgress/` + id);
 }
 
 export function getMonitorDataBi(start_date, end_date) {

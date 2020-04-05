@@ -22,6 +22,9 @@
               trigger='hover')
               p(slot="reference") {{val.name}}
             div
+              //- div.status-init(v-if='val.status === 0')
+              //-   i.el-icon-s-promotion
+              //-   p {{getStatusText(val.status)}}
               div.status-closed(v-if='val.status === -1')
                 i.el-icon-warning
                 p {{getStatusText(val.status)}}
@@ -68,7 +71,7 @@
 
 <script>
 import * as apis from '../../services/apis';
-import { lastDayOfISOWeek, startOfISOWeek, format } from 'date-fns';
+// import { lastDayOfISOWeek, startOfISOWeek, format } from 'date-fns';
 import { mapActions, mapGetters } from 'vuex';
 import { findIndex } from 'lodash';
 
@@ -98,6 +101,14 @@ export default {
   methods: {
     ...mapActions(['getMonitorConfig', 'routePush', 'setCurrentTitle', 'setBreadCrumb']),
 
+    Notification(title_context, message, type_context) {
+    this.$notify({
+      title: title_context,
+      message: message,
+      type: type_context,
+    });
+  },
+
     async getProjectArea() {
       const result = await apis.getProjectArea();
       if (!result.success) return;
@@ -123,13 +134,13 @@ export default {
 
     onGoRecord(val) {
       const label = val.name;
-      const path = `/monitor/${val.uid}`;
+      const path = `/monitor/${val.id}`;
       this.onSetBreadCrumb(label, path, 1);
       this.routePush({ path });
     },
 
     onModifyTap(val) {
-      if (!val.uid) {
+      if (!val.id) {
         val.project_area_id = this.activeTab;
         this.modifyModal = {
           flag: true,
@@ -156,19 +167,21 @@ export default {
         cancelButtonText: '取消',
       }).then(async () => {
         const area_id = val.project_area_id;
-        const id = val.uid;
+        const id = val.id;
         const name = val.name;
         const description = val.description;
-        const result = await apis.deleteMonitorProject(area_id, id, name, description);
+        const created_person = val.created_person;
+        const updated_person = "更新人";
+        const result = await apis.deleteProjectDetail(area_id, id, name, description, created_person, updated_person);
         if (!result.success) return;
-        this.$message.success('关闭成功');
+        this.Notification('已执行', '关闭成功', 'success')
         this.getProjectDetail(area_id);
       });
     },
 
     async onModifyInfoSubmit() {
       const area_id = this.modifyData.project_area_id;
-      const id = this.modifyData.uid;
+      const id = this.modifyData.id;
       const name = this.modifyData.name;
       const description = this.modifyData.description;
       const created_person = "创建人";
@@ -180,12 +193,12 @@ export default {
       }
       let result;
       if (this.modifyModal.type === 'modify') {
-        result = await apis.modifyMonitorProject(area_id, id, name, description, updated_person);
+        result = await apis.modifyMonitorProject(area_id, id, name, description,created_person, updated_person);
       } else if (this.modifyModal.type === 'add') {
         result = await apis.addProjectDetail(area_id, name, description, created_person, updated_person);
       }
       if (!result.success) return;
-      this.$message.success('操作成功');
+      this.Notification('已执行', '操作成功', 'success')
       this.modifyModal.flag = false;
       this.getProjectDetail(area_id);
     },
@@ -217,6 +230,12 @@ export default {
       font-size: 16px;
       margin-right: 5px;
     }
+    // .status-init {
+    //   color: #67C23A;
+    //   display: flex;
+    //   justify-content: flex-end;
+    //   align-items: center;
+    // }
     .status-closed {
       color: #ed4014;
       display: flex;
