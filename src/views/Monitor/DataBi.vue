@@ -129,7 +129,7 @@ export default {
       this.monitorDataBi = [];
       const startDate = format(this.rangeDate[0], 'YYYY-MM-DD');
       const endDate = format(this.rangeDate[1], 'YYYY-MM-DD');
-      const result = await apis.getMonitorDataBi(startDate, endDate);
+      const result = await apis.getProjectDashboard(startDate, endDate);
       if (!result.success) return;
       this.monitorDataBi = result.data;
       if (result.data.length === 0) this.tableEmptyText = '暂无数据...';

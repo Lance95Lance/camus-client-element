@@ -256,19 +256,19 @@ export default {
           : null,
       };
       if (params.system_name === undefined) {
-        this.$message.error('请选择系统名称');
+        this.Notification('系统名称必填', '请选择系统名称', 'warning')
         return;
       }
       if (params.stage === undefined) {
-        this.$message.error('请选择阶段');
+        this.Notification('项目阶段必填', '请选择阶段', 'warning')
         return;
       }
       if (params.stage === 8 && params.to_prod_time === null)  {
-        this.$message.error('项目已上线时,需要确定实际上线时间');
+        this.Notification('请注意', '项目已上线时,需要确定实际上线时间', 'error')
         return;
       }
       if (params.stage !== 8 && params.to_prod_time !== null)  {
-        this.$message.error('非已上线阶段,实际上线时间应该为空');
+        this.Notification('请注意', '非已上线阶段,实际上线时间应该为空', 'error')
         return;
       }
       let result;

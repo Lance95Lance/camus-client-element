@@ -256,7 +256,7 @@ export default {
     for (let index in PROJECT_INFO_DATA) {
       this.caseConf.project_options.push({
         value: PROJECT_INFO_DATA[index].id,
-        label: PROJECT_INFO_DATA[index].project_title,
+        label: PROJECT_INFO_DATA[index].name,
       });
     }
 

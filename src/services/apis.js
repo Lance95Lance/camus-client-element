@@ -43,8 +43,8 @@ export function deleteProjectProgress(id) {
   return Delete(`/api/v1/projectProgress/` + id);
 }
 
-export function getMonitorDataBi(start_date, end_date) {
-  return Get(`/api/v1/monitorDataBi`, { start_date, end_date });
+export function getProjectDashboard(start_date, end_date) {
+  return Get(`/api/v1/projectDashboard`, { start_date, end_date });
 }
 
 export function getMonitorConfig() {
