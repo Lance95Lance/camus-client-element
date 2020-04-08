@@ -15,8 +15,6 @@ sleep 20s
 
  \cp -r dist /usr/share/nginx/html
 
- \cp docker/nginx.conf /etc/nginx
-
 service nginx start
 
 echo "---------------------------nginx启动完成"
