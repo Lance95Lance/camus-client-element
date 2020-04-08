@@ -81,10 +81,10 @@ export default {
   computed: {
     ...mapGetters(['monitorConfig']),
     recordStage() {
-      return JSON.parse(get(this.monitorConfig, 'monitor_record_stage', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_stage', '{}'));
     },
     recordSyetem() {
-      return JSON.parse(get(this.monitorConfig, 'monitor_record_system', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_system', '{}'));
     },
     projects() {
       const arr = [0];
