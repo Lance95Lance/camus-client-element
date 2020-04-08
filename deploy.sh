@@ -5,16 +5,18 @@ git pull
 echo "---------------------------关闭nginx"
 service nginx stop
 
-echo "---------------------------build..."
+echo "---------------------------yarn install..."
+yarn install
+
+echo "---------------------------yarn build..."
 yarn build
 
-sleep 15s
+sleep 20s
 
-cp -r dist /usr/share/nginx/html
+ \cp -r dist /usr/share/nginx/html
 
-/usr/local/nginx/sbin/nginx/sbin/nginx  -c  ./docker/nginx.conf
+ \cp docker/nginx.conf /etc/nginx
 
-sleep 5s
-# 新pid
-newpid=`cat gunicorn.pid`
-echo "---------------------------启动完成,pid为${newpid}"
+service nginx start
+
+echo "---------------------------nginx启动完成"
