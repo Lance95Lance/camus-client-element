@@ -4,11 +4,11 @@ export default [
     id: '1',
     label: '项目管理',
     children: [
-      {
-        id: '1-1',
-        label: '项目看板',
-        url: '/project',
-      },
+      // {
+      //   id: '1-1',
+      //   label: '项目看板',
+      //   url: '/project',
+      // },
       {
         id: '1-2',
         label: '测试进度',
