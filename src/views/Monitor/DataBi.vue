@@ -44,7 +44,7 @@
         width='100px',
         label='计划上线')
       el-table-column(
-        prop='qa_woner',
+        prop='qa_owner',
         width='80px',
         label='测试负责人')
       el-table-column(
