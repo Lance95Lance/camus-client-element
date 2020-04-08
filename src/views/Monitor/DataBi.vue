@@ -59,7 +59,7 @@
         template(slot-scope="scope")
           span.red {{scope.row.risk_analysis}}
       el-table-column(
-        prop='mask',
+        prop='remark',
         label='备注')
 </template>
 
