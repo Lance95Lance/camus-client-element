@@ -102,12 +102,12 @@ export default {
     ...mapActions(['getMonitorConfig', 'routePush', 'setCurrentTitle', 'setBreadCrumb']),
 
     Notification(title_context, message, type_context) {
-    this.$notify({
-      title: title_context,
-      message: message,
-      type: type_context,
-    });
-  },
+      this.$notify({
+        title: title_context,
+        message: message,
+        type: type_context,
+      });
+    },
 
     async getProjectArea() {
       const result = await apis.getProjectArea();
@@ -171,10 +171,17 @@ export default {
         const name = val.name;
         const description = val.description;
         const created_person = val.created_person;
-        const updated_person = "更新人";
-        const result = await apis.deleteProjectDetail(area_id, id, name, description, created_person, updated_person);
+        const updated_person = '更新人';
+        const result = await apis.deleteProjectDetail(
+          area_id,
+          id,
+          name,
+          description,
+          created_person,
+          updated_person
+        );
         if (!result.success) return;
-        this.Notification('已执行', '关闭成功', 'success')
+        this.Notification('已执行', '关闭成功', 'success');
         this.getProjectDetail(area_id);
       });
     },
@@ -184,8 +191,8 @@ export default {
       const id = this.modifyData.id;
       const name = this.modifyData.name;
       const description = this.modifyData.description;
-      const created_person = "创建人";
-      const updated_person = "更新人";
+      const created_person = '创建人';
+      const updated_person = '更新人';
 
       if (!name) {
         this.$message.error('项目标题必填');
@@ -193,12 +200,25 @@ export default {
       }
       let result;
       if (this.modifyModal.type === 'modify') {
-        result = await apis.modifyMonitorProject(area_id, id, name, description,created_person, updated_person);
+        result = await apis.modifyMonitorProject(
+          area_id,
+          id,
+          name,
+          description,
+          created_person,
+          updated_person
+        );
       } else if (this.modifyModal.type === 'add') {
-        result = await apis.addProjectDetail(area_id, name, description, created_person, updated_person);
+        result = await apis.addProjectDetail(
+          area_id,
+          name,
+          description,
+          created_person,
+          updated_person
+        );
       }
       if (!result.success) return;
-      this.Notification('已执行', '操作成功', 'success')
+      this.Notification('已执行', '操作成功', 'success');
       this.modifyModal.flag = false;
       this.getProjectDetail(area_id);
     },
@@ -260,6 +280,9 @@ export default {
         margin-left: 10px;
       }
     }
+    .el-card__body {
+      white-space: pre-line;
+    }
     &-header {
       display: flex;
       justify-content: space-between;
@@ -268,7 +291,8 @@ export default {
         max-width: 68%;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: pre-line;
+
         .el-popover__reference {
           width: 100%;
           overflow: hidden;
