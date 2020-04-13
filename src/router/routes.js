@@ -4,12 +4,20 @@ import Login from '../views/Login/Login';
 import Monitor from '../views/Monitor/Index';
 import MonitorRecord from '../views/Monitor/Record';
 import MonitorDataBi from '../views/Monitor/DataBi';
+import IdNumberService from '../views/Tool/IdNumberService';
 
 
 export default [
   {
     redirect: '/project',
     path: '/',
+  },
+  {
+    component: IdNumberService,
+    path: '/id-number-service',
+    meta: {
+      title: '身份证工具',
+    },
   },
   {
     component: CaseList,

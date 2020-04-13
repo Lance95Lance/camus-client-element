@@ -33,5 +33,17 @@ export default [
       },
     ],
   },
+  {
+    icon: 'el-icon-bicycle',
+    id: '3',
+    label: '基础测试工具',
+    children: [
+      {
+        id: '3-1',
+        label: '身份证工具',
+        url: '/id-number-service',
+      },
+    ],
+  },
 
 ];
