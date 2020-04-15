@@ -151,14 +151,14 @@ export default {
 
   methods: {
     ...mapActions(['getMonitorConfig', 'setBreadCrumb']),
-    
+
     Notification(title_context, message, type_context) {
-    this.$notify({
-      title: title_context,
-      message: message,
-      type: type_context,
-    });
-  },
+      this.$notify({
+        title: title_context,
+        message: message,
+        type: type_context,
+      });
+    },
 
     async getRecord(project_detail_id) {
       const result = await apis.getProjectProgress(project_detail_id);
@@ -237,7 +237,7 @@ export default {
         // const stage = val.stage;
         const result = await apis.deleteProjectProgress(id);
         if (!result.success) return;
-        this.Notification('已执行', '删除成功', 'success')
+        this.Notification('已执行', '删除成功', 'success');
         this.getRecord(project_detail_id);
       });
     },
@@ -256,26 +256,33 @@ export default {
           : null,
       };
       if (params.system_name === undefined) {
-        this.Notification('系统名称必填', '请选择系统名称', 'warning')
+        this.Notification('系统名称必填', '请选择系统名称', 'warning');
         return;
       }
       if (params.stage === undefined) {
-        this.Notification('项目阶段必填', '请选择阶段', 'warning')
+        this.Notification('项目阶段必填', '请选择阶段', 'warning');
         return;
       }
-      if (params.stage === 8 && params.to_prod_time === null)  {
-        this.Notification('请注意', '项目已上线时,需要确定实际上线时间', 'error')
+      if (params.stage === 8 && params.to_prod_time === null) {
+        this.Notification('请注意', '项目已上线时,需要确定实际上线时间', 'error');
         return;
       }
-      if (params.stage !== 8 && params.to_prod_time !== null)  {
-        this.Notification('请注意', '非已上线阶段,实际上线时间应该为空', 'error')
+      if (params.stage !== 8 && params.to_prod_time !== null) {
+        this.Notification('请注意', '非已上线阶段,实际上线时间应该为空', 'error');
         return;
       }
+      // 为空则赋值null
+      params.work_time = params.work_time || null;
+      params.outputs = params.outputs || null;
+      params.qa_owner = params.qa_owner || null;
+      params.risk_analysis = params.risk_analysis || null;
+      params.remark = params.remark || null;
       let result;
       if (this.modifyModal.type === 'add') result = await apis.addProjectProgress(params);
-      else if (this.modifyModal.type === 'modify') result = await apis.modifyProjectProgress(this.modifyData.id, params);
+      else if (this.modifyModal.type === 'modify')
+        result = await apis.modifyProjectProgress(this.modifyData.id, params);
       if (!result.success) return;
-        this.Notification('已执行', '操作成功', 'success')
+      this.Notification('已执行', '操作成功', 'success');
       this.modifyModal.flag = false;
       this.getRecord(this.modifyData.project_detail_id);
     },
@@ -296,7 +303,7 @@ export default {
     margin-bottom: 20px;
   }
   .red {
-    color: #F56C6C;
+    color: #f56c6c;
     font-weight: bold;
   }
 }
