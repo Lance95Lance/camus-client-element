@@ -68,7 +68,7 @@
         label-position='right')
         el-row
           el-col(:span='12')
-            el-form-item(label='系统名:')
+            el-form-item(label='应用名:')
               el-select(v-model='modifyData.system_name', filterable, size='small')
                 el-option(v-for='(item, index) in recordSyetem' :value='item.status' :key='index' :label='item.label') {{ item.label }}
           el-col(:span='12')
@@ -256,7 +256,7 @@ export default {
           : null,
       };
       if (params.system_name === undefined) {
-        this.Notification('系统名称必填', '请选择系统名称', 'warning');
+        this.Notification('应用名称必填', '请选择应用名称', 'warning');
         return;
       }
       if (params.stage === undefined) {
