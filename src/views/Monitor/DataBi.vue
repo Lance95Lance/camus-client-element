@@ -20,13 +20,13 @@
         prop='project_name',
         label='测试项目')
       el-table-column(
-        prop='system_name',
+        prop='app_name',
         width='80px',
         label='相关应用')
         template(slot-scope='scope')
-          span {{getSystemName(scope.row.system_name)}}
+          span {{getAppName(scope.row.app_name)}}
       el-table-column(
-        prop='system_name',
+        prop='app_name',
         width='80px',
         label='阶段')
         template(slot-scope='scope')
@@ -84,7 +84,7 @@ export default {
       return JSON.parse(get(this.monitorConfig, 'project_progress_stage', '{}'));
     },
     recordSyetem() {
-      return JSON.parse(get(this.monitorConfig, 'project_progress_system', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_app', '{}'));
     },
     projects() {
       const arr = [0];
@@ -134,9 +134,9 @@ export default {
       this.monitorDataBi = result.data;
       if (result.data.length === 0) this.tableEmptyText = '暂无数据...';
     },
-    getSystemName(system_name) {
+    getAppName(app_name) {
       const recordSyetem = this.recordSyetem;
-      let label = system_name;
+      let label = app_name;
       if (!isNaN(+label)) {
         label = recordSyetem[findIndex(recordSyetem, { status: +label })].label;
       }

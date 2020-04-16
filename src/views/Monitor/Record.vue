@@ -5,13 +5,13 @@
       :data='recordTableData',
       border,)
       el-table-column(
-        prop='system_name',
+        prop='app_name',
         width='80px',
-        label='相关系统')
+        label='相关应用')
         template(slot-scope='scope')
-          span {{getSystemName(scope.row.system_name)}}
+          span {{getAppName(scope.row.app_name)}}
       el-table-column(
-        prop='system_name'
+        prop='app_name'
         width='80px',
         label='阶段')
         template(slot-scope='scope')
@@ -69,7 +69,7 @@
         el-row
           el-col(:span='12')
             el-form-item(label='应用名:')
-              el-select(v-model='modifyData.system_name', filterable, size='small')
+              el-select(v-model='modifyData.app_name', filterable, size='small')
                 el-option(v-for='(item, index) in recordSyetem' :value='item.status' :key='index' :label='item.label') {{ item.label }}
           el-col(:span='12')
             el-form-item(label='阶段:')
@@ -145,7 +145,7 @@ export default {
     },
 
     recordSyetem() {
-      return JSON.parse(get(this.monitorConfig, 'project_progress_system', '{}'));
+      return JSON.parse(get(this.monitorConfig, 'project_progress_app', '{}'));
     },
   },
 
@@ -166,9 +166,9 @@ export default {
       this.recordTableData = result.data;
     },
 
-    getSystemName(system_name) {
+    getAppName(app_name) {
       const recordSyetem = this.recordSyetem;
-      let label = system_name;
+      let label = app_name;
       if (!isNaN(+label)) {
         label = recordSyetem[findIndex(recordSyetem, { status: +label })].label;
       }
@@ -196,7 +196,7 @@ export default {
       this.modifyData = {
         project_detail_id: val.project_detail_id,
         id: val.id,
-        system_name: val.system_name,
+        app_name: val.app_name,
         stage: val.stage,
         work_time: val.work_time,
         outputs: val.outputs,
@@ -233,7 +233,7 @@ export default {
       }).then(async () => {
         const project_detail_id = val.project_detail_id;
         const id = val.id;
-        // const system_name = val.system_name;
+        // const app_name = val.app_name;
         // const stage = val.stage;
         const result = await apis.deleteProjectProgress(id);
         if (!result.success) return;
@@ -255,7 +255,7 @@ export default {
           ? format(this.modifyData.to_prod_time, 'YYYY-MM-DD')
           : null,
       };
-      if (params.system_name === undefined) {
+      if (params.app_name === undefined) {
         this.Notification('应用名称必填', '请选择应用名称', 'warning');
         return;
       }
