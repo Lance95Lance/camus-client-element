@@ -22,7 +22,7 @@
       el-table-column(
         prop='system_name',
         width='80px',
-        label='相关系统')
+        label='相关应用')
         template(slot-scope='scope')
           span {{getSystemName(scope.row.system_name)}}
       el-table-column(
