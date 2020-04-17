@@ -9,7 +9,7 @@ import IdNumberService from '../views/Tool/IdNumberService';
 
 export default [
   {
-    redirect: '/project',
+    redirect: '/monitor',
     path: '/',
   },
   {
