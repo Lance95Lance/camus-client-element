@@ -63,7 +63,7 @@
                 <!-- 重置按钮 -->
                 <el-button @click="resetForm('searchform')">重 置</el-button>
                 <!-- 新增按钮 -->
-                <el-button type="info" icon="el-icon-plus" plain @click="onSubmit, drawer = true"></el-button>
+                <el-button type="info" icon="el-icon-plus" plain @click="drawer = true"></el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -74,7 +74,7 @@
         <!-- 抽屉 -->
         <el-col>
           <el-drawer title :visible.sync="drawer" direction="rtl" size="35%" :show-close="false">
-            <el-form ref="createCaseform" :model="createCaseform" label-width="80px">
+            <el-form ref="Caseform" :model="Caseform" label-width="80px">
               <el-form-item label="创建用例" class="drawer_title"></el-form-item>
               <el-divider></el-divider>
 
@@ -83,7 +83,7 @@
                   <el-form-item label="所属项目" prop="project_id">
                     <el-select
                       filterable
-                      v-model="createCaseform.project_id"
+                      v-model="Caseform.project_id"
                       clearable
                       placeholder="请选择"
                     >
@@ -100,7 +100,7 @@
 
               <el-form-item label="用例等级" prop="case_priority">
                 <div>
-                  <el-radio-group v-model="createCaseform.case_priority">
+                  <el-radio-group v-model="Caseform.case_priority">
                     <el-radio-button
                       v-for="item in caseConf.case_priority_options"
                       :key="item.value"
@@ -110,7 +110,7 @@
                   </el-radio-group>
                 </div>
 
-                <!-- <el-select v-model="createCaseform.case_priority" clearable placeholder="请选择">
+                <!-- <el-select v-model="Caseform.case_priority" clearable placeholder="请选择">
                       <el-option
                         v-for="item in caseConf.case_priority_options"
                         :key="item.value"
@@ -122,7 +122,7 @@
 
               <el-form-item label="用例状态" prop="case_status">
                 <div>
-                  <el-radio-group v-model="createCaseform.case_status">
+                  <el-radio-group v-model="Caseform.case_status">
                     <el-radio-button
                       v-for="item in caseConf.case_status_options"
                       :key="item.value"
@@ -131,15 +131,10 @@
                     ></el-radio-button>
                   </el-radio-group>
                 </div>
+              </el-form-item>
 
-                <!-- <el-select v-model="createCaseform.case_priority" clearable placeholder="请选择">
-                      <el-option
-                        v-for="item in caseConf.case_priority_options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      ></el-option>
-                </el-select>-->
+              <el-form-item label="用例详情">
+                <el-input type="textarea" v-model="Caseform.case_detail" :rows="4"></el-input>
               </el-form-item>
 
               <el-form-item>
@@ -312,7 +307,7 @@ export default {
       // 抽屉
       drawer: false,
 
-      createCaseform: {},
+      Caseform: {},
       timer: null,
       loading: false,
     };
