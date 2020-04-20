@@ -58,19 +58,101 @@
           <div class="buttonGroup">
             <el-form ref="searchform" :model="searchform" label-width="100px">
               <el-form-item>
-                <el-button type="primary" @click="onSubmit">搜 索</el-button>
+                <!-- 搜索按钮 -->
+                <el-button type="primary" icon="el-icon-search" circle @click="onSubmit"></el-button>
+                <!-- 重置按钮 -->
                 <el-button @click="resetForm('searchform')">重 置</el-button>
+                <!-- 新增按钮 -->
+                <el-button type="info" icon="el-icon-plus" plain @click="onSubmit, drawer = true"></el-button>
               </el-form-item>
             </el-form>
           </div>
         </el-form>
       </div>
 
+      <div>
+        <!-- 抽屉 -->
+        <el-col>
+          <el-drawer title :visible.sync="drawer" direction="rtl" size="35%" :show-close="false">
+            <el-form ref="createCaseform" :model="createCaseform" label-width="80px">
+              <el-form-item label="创建用例" class="drawer_title"></el-form-item>
+              <el-divider></el-divider>
+
+              <el-row>
+                <el-col :span="10">
+                  <el-form-item label="所属项目" prop="project_id">
+                    <el-select
+                      filterable
+                      v-model="createCaseform.project_id"
+                      clearable
+                      placeholder="请选择"
+                    >
+                      <el-option
+                        v-for="item in caseConf.project_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-form-item label="用例等级" prop="case_priority">
+                <div>
+                  <el-radio-group v-model="createCaseform.case_priority">
+                    <el-radio-button
+                      v-for="item in caseConf.case_priority_options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-radio-button>
+                  </el-radio-group>
+                </div>
+
+                <!-- <el-select v-model="createCaseform.case_priority" clearable placeholder="请选择">
+                      <el-option
+                        v-for="item in caseConf.case_priority_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                </el-select>-->
+              </el-form-item>
+
+              <el-form-item label="用例状态" prop="case_status">
+                <div>
+                  <el-radio-group v-model="createCaseform.case_status">
+                    <el-radio-button
+                      v-for="item in caseConf.case_status_options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-radio-button>
+                  </el-radio-group>
+                </div>
+
+                <!-- <el-select v-model="createCaseform.case_priority" clearable placeholder="请选择">
+                      <el-option
+                        v-for="item in caseConf.case_priority_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                </el-select>-->
+              </el-form-item>
+
+              <el-form-item>
+                <el-button @click="onSubmit">立即创建</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-form>
+          </el-drawer>
+        </el-col>
+      </div>
       <!-- <el-form ref="searchform" :model="searchform" label-width="100px"> -->
 
-      <el-table
-        :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)"
-      >
+      <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)">
         <el-table-column prop="table_number" label="序号"></el-table-column>
         <!-- <el-table-column
         prop="case_priority"
@@ -226,6 +308,13 @@ export default {
       },
       tableData: [],
       case_conf: {},
+
+      // 抽屉
+      drawer: false,
+
+      createCaseform: {},
+      timer: null,
+      loading: false,
     };
   },
   async mounted() {
@@ -300,6 +389,11 @@ export default {
     // this.totalCount = this.tableData.length;
   },
   methods: {
+    cancelForm() {
+      this.loading = false;
+      this.drawer = false;
+      clearTimeout(this.timer);
+    },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       return 'white-space: pre-line';
     },
@@ -402,7 +496,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  lang="less">
 .line {
   text-align: center;
 }
@@ -414,6 +508,20 @@ export default {
 }
 .searchSelectGroup {
   text-align: right;
+}
+.drawer_title {
+  .el-form-item__label {
+    text-align: right;
+    vertical-align: middle;
+    float: left;
+    font-size: 14px;
+    color: #606266;
+    line-height: 40px;
+    padding: 0 12px 0 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  text-align: center;
 }
 
 /*实现表格头数据换行*/
