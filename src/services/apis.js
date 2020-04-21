@@ -119,6 +119,10 @@ export function getAllCase() {
   return Get(`api/v1/case`);
 }
 
+export function postCreateCase(params) {
+  return Post(`api/v1/case`, params);
+}
+
 export function postSearchCase(params) {
   return Post(`api/v1/caseSearch`, params);
 }
