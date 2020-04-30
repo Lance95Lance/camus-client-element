@@ -16,6 +16,9 @@
       <el-form-item>
         <el-button type="primary" @click="submitIdNumber">查询</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="generateIdCard" :loading="loading">生成身份证图片</el-button>
+      </el-form-item>
     </el-form>
 
     <el-form :inline="true" :model="idNumberParams">
@@ -41,6 +44,7 @@ import * as apis from '../../services/apis';
 export default {
   data() {
     return {
+      loading: false,
       rules: {},
       idNumberInfo: {
         idNumber: '',
@@ -83,6 +87,19 @@ export default {
           }
         );
       }
+    },
+
+    async generateIdCard() {
+      this.loading = true;
+      const result = await apis.getIdCard(this.idNumberInfo.idNumber);
+      const data = result.data;
+
+      if (!result.success) {
+        this.Notification('生成失败', result.message, 'warning');
+      } else {
+        window.open(data);
+      }
+      this.loading = false;
     },
     async submitIdNumberParams() {
       const result = await apis.postIdInfo(
