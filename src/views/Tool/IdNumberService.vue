@@ -31,6 +31,16 @@
           <el-option label="男" value="1"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label>
+        <el-select v-model="idNumberParams.area_id" filterable clearable placeholder="地区(默认随机)">
+          <el-option
+            v-for="item in case_conf.area_info_options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitIdNumberParams">生成</el-button>
       </el-form-item>
@@ -44,6 +54,9 @@ import * as apis from '../../services/apis';
 export default {
   data() {
     return {
+      case_conf: {
+        area_info_options:[],
+      },
       loading: false,
       rules: {},
       idNumberInfo: {
@@ -52,8 +65,20 @@ export default {
       idNumberParams: {
         age: '',
         sex: '',
+        area_id: '',
       },
     };
+  },
+  async mounted() {
+    const BASE_CASE_RESULT = await apis.getBaseConf();
+    const BASE_CASE_CONF = BASE_CASE_RESULT.data;
+
+    for (let enum_index in BASE_CASE_CONF.area_info) {
+      this.case_conf.area_info_options.push({
+        value: enum_index,
+        label: BASE_CASE_CONF.area_info[enum_index],
+      });
+    }
   },
   methods: {
     Notification(title_context, message, type_context) {
@@ -104,7 +129,8 @@ export default {
     async submitIdNumberParams() {
       const result = await apis.postIdInfo(
         parseInt(this.idNumberParams.age) || 18,
-        this.idNumberParams.sex || 0
+        this.idNumberParams.sex || 0,
+        this.idNumberParams.area_id || null
       );
       const data = result.data;
 
