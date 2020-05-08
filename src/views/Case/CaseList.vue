@@ -58,25 +58,126 @@
           <div class="buttonGroup">
             <el-form ref="searchform" :model="searchform" label-width="100px">
               <el-form-item>
-                <el-button type="primary" @click="onSubmit">搜 索</el-button>
+                <!-- 搜索按钮 -->
+                <el-button type="primary" icon="el-icon-search" circle @click="onSubmit"></el-button>
+                <!-- 重置按钮 -->
                 <el-button @click="resetForm('searchform')">重 置</el-button>
+                <!-- 新增按钮 -->
+                <el-button type="info" icon="el-icon-plus" plain @click="setDrawer('add')"></el-button>
               </el-form-item>
             </el-form>
           </div>
         </el-form>
       </div>
 
+      <div>
+        <!-- 抽屉 -->
+        <el-col>
+          <el-drawer title :visible.sync="drawer" direction="rtl" :show-close="false">
+            <el-form ref="caseForm" :rules="rules" :model="caseForm" label-width="90px">
+              <el-form-item :label="drawer_title"></el-form-item>
+              <el-divider></el-divider>
+
+              <el-row style="height: 60px;">
+                <el-col :span="14">
+                  <el-form-item label="所属项目" prop="project_id">
+                    <el-select filterable v-model="caseForm.project_id" clearable placeholder="请选择">
+                      <el-option
+                        v-for="item in caseConf.project_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="height: 60px;">
+                <el-col :span="14">
+                  <el-form-item label="用例标题" prop="case_title">
+                    <div>
+                      <el-input placeholder="请输入用例标题" v-model="caseForm.case_title" clearable></el-input>
+                    </div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="height: 60px;">
+                <el-col :span="14">
+                  <el-form-item label="用例等级" prop="case_priority_label">
+                    <div>
+                      <el-radio-group v-model="caseForm.case_priority_label">
+                        <el-radio-button
+                          v-for="item in caseConf.case_priority_options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        ></el-radio-button>
+                      </el-radio-group>
+                    </div>
+
+                    <!-- <el-select v-model="caseForm.case_priority" clearable placeholder="请选择">
+                      <el-option
+                        v-for="item in caseConf.case_priority_options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>-->
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="height: 60px;">
+                <el-col>
+                  <el-form-item label="用例状态" prop="case_status_label">
+                    <div>
+                      <el-radio-group v-model="caseForm.case_status_label">
+                        <el-radio-button
+                          v-for="item in caseConf.case_status_options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        ></el-radio-button>
+                      </el-radio-group>
+                    </div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="height: 60px;">
+                <el-col>
+                  <el-form-item label="用例详情" prop="case_detail">
+                    <el-input type="textarea" v-model="caseForm.case_detail" :rows="4"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="height: 60px;">
+                <el-col>
+                  <el-form-item>
+                    <el-button :loading="loading" @click="createCase('caseForm')">立即创建</el-button>
+                    <el-button @click="drawer = false">取消</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+            </el-form>
+          </el-drawer>
+        </el-col>
+      </div>
       <!-- <el-form ref="searchform" :model="searchform" label-width="100px"> -->
 
-      <el-table
-        :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)"
-      >
+      <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)">
         <el-table-column prop="table_number" label="序号"></el-table-column>
         <!-- <el-table-column
         prop="case_priority"
         label="用例优先级">
         </el-table-column>-->
-        <el-table-column prop="case_title" label="测试标题"></el-table-column>
+        <el-table-column prop="case_title" label="用例标题" width="500px"></el-table-column>
+        <el-table-column prop="case_detail" label="用例详情" width="500px"></el-table-column>
+
         <el-table-column prop="case_status" label="用例状态">
           <template slot-scope="scope">
             <div slot="reference" class="caseBug-wrapper">
@@ -112,9 +213,9 @@
         </el-table-column>
         <el-table-column prop="created_person" label="创建者"></el-table-column>
         <el-table-column prop="updated_person" label="更新者"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
-            <el-popover placement="top" width="200" trigger="click">
+            <el-popover placement="top" width="150" trigger="click">
               <!-- <el-table :data="gridData">
                 <el-table-column width="150" property="date" label="日期"></el-table-column>
                 <el-table-column width="100" property="name" label="姓名"></el-table-column>
@@ -226,7 +327,182 @@ export default {
       },
       tableData: [],
       case_conf: {},
+
+      // 抽屉
+      drawer: false,
+
+      caseForm: {},
+      rules: {
+        project_id: [{ required: true, message: '请选择所属项目', trigger: 'change' }],
+        case_title: [{ required: true, message: '请输入用例标题', trigger: 'change' }],
+        case_priority_label: [{ required: true, message: '请选择用例优先级', trigger: 'change' }],
+        case_status_label: [{ required: true, message: '请选择用例状态', trigger: 'change' }],
+        case_detail: [{ required: true, message: '请输入用例详情', trigger: 'change' }],
+      },
+      drawer_title: '',
+      timer: null,
+      loading: false,
     };
+  },
+  methods: {
+    setDrawer(val) {
+      if (val === 'add') {
+        this.drawer_title = '创建用例';
+      } else if (val === 'modify') {
+        this.drawer_title = '更新用例';
+      }
+      this.drawer = true;
+    },
+    async createCaseMethod() {
+      const createCaseForm = {};
+
+      //用例等级
+      for (let enum_index in this.caseConf.case_priority_options) {
+        if (
+          this.caseConf.case_priority_options[enum_index].label ===
+          this.caseForm.case_priority_label
+        ) {
+          createCaseForm.case_priority = this.caseConf.case_priority_options[enum_index].value;
+        }
+      }
+
+      //用例状态
+      for (let enum_index in this.caseConf.case_status_options) {
+        if (
+          this.caseConf.case_status_options[enum_index].label === this.caseForm.case_status_label
+        ) {
+          createCaseForm.case_status = this.caseConf.case_status_options[enum_index].value;
+        }
+      }
+
+      createCaseForm.project_id = this.caseForm.project_id;
+      createCaseForm.case_title = this.caseForm.case_title;
+      createCaseForm.case_detail = this.caseForm.case_detail;
+      createCaseForm.created_person = 'camus';
+
+      this.loading = true;
+      const result = await apis.postCreateCase(createCaseForm);
+      if (!result.success) {
+        this.Notification('创建失败', result.message, 'error');
+      } else {
+        this.Notification('已创建', '执行成功', 'success');
+      }
+      this.loading = false;
+    },
+    createCase(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.createCaseMethod();
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    cancelForm() {
+      this.loading = false;
+      this.drawer = false;
+      clearTimeout(this.timer);
+    },
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      return 'white-space: pre-line';
+    },
+    Notification(title_context, message, type_context) {
+      this.$notify({
+        title: title_context,
+        message: message,
+        type: type_context,
+      });
+    },
+    async searchCase() {
+      let search_form_data = {};
+      for (let index in this.searchform) {
+        if (this.searchform[index] !== '') {
+          search_form_data[index] = this.searchform[index];
+        }
+      }
+
+      this.tableData = [];
+
+      const CASE_RESULT = await apis.postSearchCase(search_form_data);
+      const CASE_INFO_DATA = CASE_RESULT.data;
+
+      // 用例信息
+      // 表格序号计数(非接口返回序号)
+      let table_number = 0;
+      for (let index in CASE_INFO_DATA) {
+        table_number = table_number + 1;
+        this.tableData.push({
+          table_number: table_number,
+          id: CASE_INFO_DATA[index].id,
+          case_title: CASE_INFO_DATA[index].case_title,
+          case_detail: CASE_INFO_DATA[index].case_detail,
+          project_id: CASE_INFO_DATA[index].project_id,
+          case_priority: this.case_conf.case_priority[CASE_INFO_DATA[index].case_priority],
+          case_priority_key: CASE_INFO_DATA[index].case_priority,
+          case_status: this.case_conf.case_status[CASE_INFO_DATA[index].case_status],
+          case_status_key: CASE_INFO_DATA[index].case_status,
+          case_bug: CASE_INFO_DATA[index].case_bug || false,
+          created_person: CASE_INFO_DATA[index].created_person,
+          updated_person: CASE_INFO_DATA[index].updated_person,
+        });
+      }
+      this.totalCount = this.tableData.length;
+    },
+    async onSubmit() {
+      await this.searchCase();
+      this.$message(`查询成功, 总共${this.totalCount}条用例`);
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    onCancel() {
+      this.$message({
+        message: 'cancel!',
+        type: 'warning',
+      });
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      // 改变每页显示的条数
+      this.PageSize = val;
+      // 注意：在改变每页显示的条数时，要将页码显示到第一页
+      this.currentPage = 1;
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      // 改变默认的页数
+      this.currentPage = val;
+    },
+    handleEdit(index, row) {
+      console.log(index, row);
+      this.putForm.case_status = row.case_status_key;
+      this.putForm.case_bug = row.case_bug;
+      this.putForm.updated_person = 'camus';
+      this.putForm.id = row.id;
+      this.putForm.project_id = row.project_id;
+      this.putForm.case_title = row.case_title;
+      this.putForm.created_person = row.created_person;
+    },
+    async putChange(row) {
+      console.log(this.putForm);
+      const result = await apis.putSimpleChangeCase(row.id, this.putForm);
+      if (!result.success) {
+        this.Notification('变更失败', result.message, 'error');
+      } else {
+        this.Notification('已变更', '执行成功', 'success');
+        this.searchCase();
+      }
+    },
+    async handleDelete(index, row) {
+      const result = await apis.deleteCase(row.id);
+      if (!result.success) {
+        this.Notification('删除失败', result.message, 'error');
+      } else {
+        this.Notification('已删除', '执行成功', 'success');
+        this.searchCase();
+      }
+    },
   },
   async mounted() {
     const BASE_CASE_RESULT = await apis.getCaseConf();
@@ -299,110 +575,10 @@ export default {
     // }
     // this.totalCount = this.tableData.length;
   },
-  methods: {
-    cellStyle({ row, column, rowIndex, columnIndex }) {
-      return 'white-space: pre-line';
-    },
-    Notification(title_context, message, type_context) {
-      this.$notify({
-        title: title_context,
-        message: message,
-        type: type_context,
-      });
-    },
-    async searchCase() {
-      let search_form_data = {};
-      for (let index in this.searchform) {
-        if (this.searchform[index] !== '') {
-          search_form_data[index] = this.searchform[index];
-        }
-      }
-
-      this.tableData = [];
-
-      const CASE_RESULT = await apis.postSearchCase(search_form_data);
-      const CASE_INFO_DATA = CASE_RESULT.data;
-
-      // 用例信息
-      // 表格序号计数(非接口返回序号)
-      let table_number = 0;
-      for (let index in CASE_INFO_DATA) {
-        table_number = table_number + 1;
-        this.tableData.push({
-          table_number: table_number,
-          id: CASE_INFO_DATA[index].id,
-          case_title: CASE_INFO_DATA[index].case_title,
-          project_id: CASE_INFO_DATA[index].project_id,
-          case_priority: this.case_conf.case_priority[CASE_INFO_DATA[index].case_priority],
-          case_priority_key: CASE_INFO_DATA[index].case_priority,
-          case_status: this.case_conf.case_status[CASE_INFO_DATA[index].case_status],
-          case_status_key: CASE_INFO_DATA[index].case_status,
-          case_bug: CASE_INFO_DATA[index].case_bug || false,
-          created_person: CASE_INFO_DATA[index].created_person,
-          updated_person: CASE_INFO_DATA[index].updated_person,
-        });
-      }
-      this.totalCount = this.tableData.length;
-    },
-    async onSubmit() {
-      await this.searchCase();
-      this.$message(`查询成功, 总共${this.totalCount}条用例`);
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning',
-      });
-    },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-      // 改变每页显示的条数
-      this.PageSize = val;
-      // 注意：在改变每页显示的条数时，要将页码显示到第一页
-      this.currentPage = 1;
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      // 改变默认的页数
-      this.currentPage = val;
-    },
-    handleEdit(index, row) {
-      console.log(index, row);
-      this.putForm.case_status = row.case_status_key;
-      this.putForm.case_bug = row.case_bug;
-      this.putForm.updated_person = 'camus';
-      this.putForm.id = row.id;
-      this.putForm.project_id = row.project_id;
-      this.putForm.case_title = row.case_title;
-      this.putForm.created_person = row.created_person;
-    },
-    async putChange(row) {
-      console.log(this.putForm);
-      const result = await apis.putSimpleChangeCase(row.id, this.putForm);
-      if (!result.success) {
-        this.Notification('变更失败', result.message, 'error');
-      } else {
-        this.Notification('已变更', '执行成功', 'success');
-        this.searchCase();
-      }
-    },
-    async handleDelete(index, row) {
-      const result = await apis.deleteCase(row.id);
-      if (!result.success) {
-        this.Notification('删除失败', result.message, 'error');
-      } else {
-        this.Notification('已删除', '执行成功', 'success');
-        this.searchCase();
-      }
-    },
-  },
 };
 </script>
 
-<style scoped>
+<style  lang="less">
 .line {
   text-align: center;
 }
