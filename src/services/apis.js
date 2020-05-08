@@ -51,6 +51,10 @@ export function getMonitorConfig() {
   return Get(`/api/v1/conf`);
 }
 
+export function getBaseConf() {
+  return Get(`/api/v1/conf`);
+}
+
 export function postPublicService(app_name, host_name, download_url) {
   return Post(`/api/v1/publicService`, { app_name, host_name, download_url });
 }
@@ -63,8 +67,12 @@ export function getIdInfo(idNumber) {
   return Get(`/api/v1/idInfo`, { idNumber });
 }
 
-export function postIdInfo(age, sex) {
-  return Post(`/api/v1/idInfo`, { age, sex });
+export function getIdCard(idNumber) {
+  return Get(`/api/v1/idCard`, { idNumber });
+}
+
+export function postIdInfo(age, sex, area_id) {
+  return Post(`/api/v1/idInfo`, { age, sex, area_id});
 }
 
 export function postDailyInfo(daily_list,timeout = 15000) {
