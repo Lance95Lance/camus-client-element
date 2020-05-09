@@ -162,7 +162,6 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-
             </el-form>
           </el-drawer>
         </el-col>
@@ -175,7 +174,53 @@
         prop="case_priority"
         label="用例优先级">
         </el-table-column>-->
-        <el-table-column prop="case_title" label="用例标题" width="500px"></el-table-column>
+
+        <el-table-column prop="case_title" label="用例标题" width="500px">
+          <template slot-scope="scope">
+            <el-button
+              type="text"
+              slot="reference"
+              @click="handleEdit(scope.$index, scope.row), dialogFormVisible = true"
+            >{{scope.row.case_title}}</el-button>
+
+            <el-dialog title="更新用例" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+              <el-form :model="putForm" :rules="rules" ref="putForm">
+                <el-row style="height: 60px;">
+                  <el-col :span="10">
+                    <el-form-item label="用例等级" prop="case_priority_label">
+                      <div>
+                        <el-radio-group v-model="putForm.case_priority_label">
+                          <el-radio-button
+                            v-for="item in caseConf.case_priority_options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          ></el-radio-button>
+                        </el-radio-group>
+                      </div>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <el-form-item label="用例标题" prop="case_title">
+                  <div>
+                    <el-input placeholder="请输入用例标题" v-model="putForm.case_title" clearable></el-input>
+                  </div>
+                </el-form-item>
+
+                <el-form-item label="用例详情" prop="case_detail">
+                  <div>
+                    <el-input placeholder="请输入用例详情" type="textarea" v-model="putForm.case_detail"></el-input>
+                  </div>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="putCase('putForm', scope.row)">确 定</el-button>
+              </div>
+            </el-dialog>
+          </template>
+        </el-table-column>
         <el-table-column prop="case_detail" label="用例详情" width="500px"></el-table-column>
 
         <el-table-column prop="case_status" label="用例状态">
@@ -247,7 +292,7 @@
               <div>
                 <br />
               </div>
-              <el-button type="primary" round @click="putChange(scope.row)">确认</el-button>
+              <el-button type="primary" round @click="putChange(scope.row, 'simple')">确认</el-button>
 
               <el-button
                 size="mini"
@@ -295,6 +340,8 @@ import { format } from 'date-fns';
 export default {
   data() {
     return {
+      dialogFormVisible: false,
+
       // 默认显示第几页
       currentPage: 1,
       // 总条数，根据接口获取数据长度(注意：这里不能为空)
@@ -311,9 +358,15 @@ export default {
         case_bug: '',
       },
       putForm: {
+        case_title: '',
+        case_detail: '',
         case_bug: '',
         case_status: '',
+        case_status_label: '',
+        case_priority: '',
+        case_priority_label: '',
         updated_person: '',
+        project_id: '',
       },
       caseConf: {
         case_priority_options: [],
@@ -399,6 +452,26 @@ export default {
         }
       });
     },
+    putCase(formName, row) {
+      //用例等级
+      for (let enum_index in this.caseConf.case_priority_options) {
+        if (
+          this.caseConf.case_priority_options[enum_index].label ===
+          this.putForm.case_priority_label
+        ) {
+          this.putForm.case_priority = this.caseConf.case_priority_options[enum_index].value;
+        }
+      }
+      
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.putChange();
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
     cancelForm() {
       this.loading = false;
       this.drawer = false;
@@ -477,21 +550,33 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
       this.putForm.case_status = row.case_status_key;
+      this.putForm.case_status_label = row.case_status;
+      this.putForm.case_priority = row.case_priority_key;
+      this.putForm.case_priority_label = row.case_priority;
       this.putForm.case_bug = row.case_bug;
       this.putForm.updated_person = 'camus';
       this.putForm.id = row.id;
       this.putForm.project_id = row.project_id;
       this.putForm.case_title = row.case_title;
+      this.putForm.case_detail = row.case_detail;
       this.putForm.created_person = row.created_person;
-    },
-    async putChange(row) {
       console.log(this.putForm);
-      const result = await apis.putSimpleChangeCase(row.id, this.putForm);
+    },
+    async putChange(row, type = 'basic') {
+      let case_id = 0;
+      if (type === 'simple') {
+        case_id = row.id;
+      } else {
+        case_id = this.putForm.id;
+      }
+
+      const result = await apis.putSimpleChangeCase(case_id, this.putForm);
       if (!result.success) {
         this.Notification('变更失败', result.message, 'error');
       } else {
         this.Notification('已变更', '执行成功', 'success');
         this.searchCase();
+        this.dialogFormVisible = false;
       }
     },
     async handleDelete(index, row) {

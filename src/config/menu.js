@@ -28,14 +28,14 @@ export default [
     children: [
       {
         id: '2-1',
-        label: '用例搜索',
+        label: '用例中心',
         url: '/case-search',
       },
-      {
-        id: '2-2',
-        label: '用例上传',
-        url: '/case-upload',
-      },
+      // {
+      //   id: '2-2',
+      //   label: '用例上传',
+      //   url: '/case-upload',
+      // },
     ],
   },
   {
