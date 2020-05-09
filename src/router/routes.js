@@ -1,4 +1,5 @@
 import CaseList from '../views/Case/CaseList';
+import CaseUpload from '../views/Case/CaseUpload';
 import Project from '../views/Case/Project';
 import Login from '../views/Login/Login';
 import Monitor from '../views/Monitor/Index';
@@ -24,6 +25,13 @@ export default [
     path: '/case-search',
     meta: {
       title: '用例搜索',
+    },
+  },
+  {
+    component: CaseUpload,
+    path: '/case-upload',
+    meta: {
+      title: '用例上传',
     },
   },
   {
