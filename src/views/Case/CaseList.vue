@@ -187,7 +187,7 @@
               <el-form :model="putForm" :rules="rules" ref="putForm">
                 <el-row style="height: 60px;">
                   <el-col :span="10">
-                    <el-form-item label="用例等级" prop="case_priority_label">
+                    <el-form-item label="用例等级" prop="case_priority_label" style="font-weight:bold">
                       <div>
                         <el-radio-group v-model="putForm.case_priority_label">
                           <el-radio-button
@@ -202,15 +202,15 @@
                   </el-col>
                 </el-row>
 
-                <el-form-item label="用例标题" prop="case_title">
+                <el-form-item label="用例标题" prop="case_title" style="font-weight:bold">
                   <div>
                     <el-input placeholder="请输入用例标题" v-model="putForm.case_title" clearable></el-input>
                   </div>
                 </el-form-item>
 
-                <el-form-item label="用例详情" prop="case_detail">
+                <el-form-item label="用例详情" prop="case_detail" style="font-weight:bold">
                   <div>
-                    <el-input placeholder="请输入用例详情" type="textarea" v-model="putForm.case_detail"></el-input>
+                    <el-input placeholder="请输入用例详情" type="textarea" :rows="10" v-model="putForm.case_detail"></el-input>
                   </div>
                 </el-form-item>
               </el-form>
