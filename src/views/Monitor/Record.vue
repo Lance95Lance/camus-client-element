@@ -187,7 +187,7 @@ export default {
       };
       this.modifyModal = {
         flag: true,
-        title: '新增监控记录',
+        title: '新增测试进度',
         type: 'add',
       };
     },
@@ -210,14 +210,14 @@ export default {
       if (type === 'add') {
         this.modifyModal = {
           flag: true,
-          title: '新增监控记录',
+          title: '新增测试进度',
           type: 'add',
         };
         delete this.modifyData.id;
       } else if (type === 'modify') {
         this.modifyModal = {
           flag: true,
-          title: '修改监控记录',
+          title: '修改测试进度',
           type: 'modify',
         };
       }
