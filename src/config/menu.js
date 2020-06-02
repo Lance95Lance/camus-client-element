@@ -48,6 +48,11 @@ export default [
         label: '身份证工具',
         url: '/id-number-service',
       },
+      {
+        id: '3-2',
+        label: '时间推算',
+        url: '/time-extrapolation',
+      },
     ],
   },
 
