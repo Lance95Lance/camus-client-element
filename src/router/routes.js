@@ -6,6 +6,7 @@ import Monitor from '../views/Monitor/Index';
 import MonitorRecord from '../views/Monitor/Record';
 import MonitorDataBi from '../views/Monitor/DataBi';
 import IdNumberService from '../views/Tool/IdNumberService';
+import TimeExtrapolation from '../views/Tool/TimeExtrapolation';
 
 
 export default [
@@ -18,6 +19,13 @@ export default [
     path: '/id-number-service',
     meta: {
       title: '身份证工具',
+    },
+  },
+  {
+    component: TimeExtrapolation,
+    path: '/time-extrapolation',
+    meta: {
+      title: '时间推算',
     },
   },
   {

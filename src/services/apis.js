@@ -55,6 +55,11 @@ export function getBaseConf() {
   return Get(`/api/v1/conf`);
 }
 
+export function getDateExtrapolation(date, days) {
+  return Get(`/api/v1/dateExtrapolation?date=${date}&days=${days}`);
+}
+
+
 export function postPublicService(app_name, host_name, download_url) {
   return Post(`/api/v1/publicService`, { app_name, host_name, download_url });
 }
