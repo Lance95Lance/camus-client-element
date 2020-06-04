@@ -21,10 +21,39 @@
         <div v-if="dateExtrapolationFlag === true">
           <el-alert :title="extrapolateDate" type="success" effect="dark" show-icon center></el-alert>
         </div>
+
+
+
+  <div class="block">
+    <span class="demonstration">开始日期</span>
+    <el-date-picker
+      v-model="dateInterval.begin_date"
+      type="date"
+      placeholder="选择日期">
+    </el-date-picker>
+  </div>
+  <div class="block">
+    <span class="demonstration">结束日期</span>
+    <el-date-picker
+      v-model="dateInterval.end_date"
+      align="right"
+      type="date"
+      placeholder="选择日期"
+      :picker-options="pickerOptions">
+    </el-date-picker>
+  </div>
+  <el-form-item required>
+    <el-button type="primary" @click="getDateInterval">计算</el-button>
+  </el-form-item>
+  <div v-if="IntervalDateFlag === true">
+    <el-alert :title="IntervalDate" type="success" effect="dark" show-icon center></el-alert>
+  </div>
+
       </el-form>
     </div>
   </div>
 </template>
+
 
 <script>
 import * as apis from '../../services/apis';
@@ -40,8 +69,17 @@ export default {
         option: true,
         days: '',
       },
+      IntervalDateFlag:false,
+      IntervalDate:'',
+      dateInterval: {
+        begin_date: '',
+        end_date:''
+      },
     };
   },
+
+
+
   async mounted() {},
   methods: {
     Notification(title_context, message, type_context) {
@@ -72,8 +110,24 @@ export default {
         this.extrapolateDate = "推算后日期：" + result.data;
       }
     },
+
+
+    async getDateInterval() {
+      const result = await apis.getDateInterval(
+        format(this.dateInterval.begin_date, 'YYYY-MM-DD'),format(this.dateInterval.end_date, 'YYYY-MM-DD')
+      );
+        if (!result.success) {
+        this.Notification('计算失败', result.message, 'warning');
+      } else {
+        this.IntervalDateFlag = true;
+        this.IntervalDate = "计算天数为：" + result.data;
+      }
+    },
+
+
   },
 };
+;
 </script>
 
 <style lang="less">
