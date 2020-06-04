@@ -59,6 +59,11 @@ export function getDateExtrapolation(date, days) {
   return Get(`/api/v1/dateExtrapolation?date=${date}&days=${days}`);
 }
 
+//  -------
+export function getDateInterval(begin_date, end_date) {
+  return Get(`/api/v1/DateInterval?begin_date=${begin_date}&end_date=${end_date}`);
+}
+//------
 
 export function postPublicService(app_name, host_name, download_url) {
   return Post(`/api/v1/publicService`, { app_name, host_name, download_url });
